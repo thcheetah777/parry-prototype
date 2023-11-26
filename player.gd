@@ -1,11 +1,11 @@
 extends CharacterBody2D
 class_name Player
 
-@export var run_speed = 180
-@export var jump_velocity = 320
+@export var run_speed = 160
+@export var jump_velocity = 300
 @export var gravity = 980
 @export var fall_gravity = 1800
-@export var double_jump = true
+@export var double_jump = false
 
 @export var stretch = 1.8
 @export var squash = 1.8
