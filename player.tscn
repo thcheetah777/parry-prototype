@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b2g8d8f5ta34h"]
+[gd_scene load_steps=5 format=3 uid="uid://b2g8d8f5ta34h"]
 
 [ext_resource type="Texture2D" uid="uid://bl48f30rkyl05" path="res://assets/player.png" id="1_banh4"]
 [ext_resource type="Script" path="res://player.gd" id="1_e5xnd"]
@@ -6,13 +6,24 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6d0we"]
 size = Vector2(10, 10)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_aevsr"]
+radius = 60.0
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_e5xnd")
 
 [node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, 6)
 texture = ExtResource("1_banh4")
 offset = Vector2(0, -6)
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
-position = Vector2(0, -6)
 shape = SubResource("RectangleShape2D_6d0we")
+
+[node name="ParryArea" type="Area2D" parent="."]
+
+[node name="CollisionShape" type="CollisionShape2D" parent="ParryArea"]
+shape = SubResource("CircleShape2D_aevsr")
+
+[connection signal="area_entered" from="ParryArea" to="." method="_on_parry_area_area_entered"]
+[connection signal="area_exited" from="ParryArea" to="." method="_on_parry_area_area_exited"]
