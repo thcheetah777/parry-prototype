@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://duvehrwbbw012"]
+
+[ext_resource type="Script" path="res://turret.gd" id="1_i3i1h"]
+[ext_resource type="Texture2D" uid="uid://b65ox2licrqh0" path="res://assets/turret.png" id="1_u31i0"]
+[ext_resource type="Texture2D" uid="uid://cj4dmq4qbma30" path="res://assets/turret-gun.png" id="2_ae52h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fxp1q"]
+size = Vector2(24, 16)
+
+[node name="Turret" type="Area2D"]
+z_index = 10
+collision_layer = 2
+script = ExtResource("1_i3i1h")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_u31i0")
+offset = Vector2(0, -8)
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_fxp1q")
+
+[node name="Gun" type="Sprite2D" parent="."]
+position = Vector2(0, -6)
+texture = ExtResource("2_ae52h")
+offset = Vector2(0, -11)
+
+[node name="FirePoint" type="Marker2D" parent="Gun"]
+position = Vector2(0, -20)
+gizmo_extents = 5.0
+
+[node name="FireTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[connection signal="timeout" from="FireTimer" to="." method="_on_fire_timer_timeout"]

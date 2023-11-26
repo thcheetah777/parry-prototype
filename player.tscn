@@ -1,15 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://b2g8d8f5ta34h"]
+[gd_scene load_steps=6 format=3 uid="uid://b2g8d8f5ta34h"]
 
 [ext_resource type="Texture2D" uid="uid://bl48f30rkyl05" path="res://assets/player.png" id="1_banh4"]
 [ext_resource type="Script" path="res://player.gd" id="1_e5xnd"]
+[ext_resource type="Texture2D" uid="uid://bkt6nggw2k5yr" path="res://assets/arrow.png" id="3_d1qai"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6d0we"]
 size = Vector2(10, 10)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_aevsr"]
-radius = 60.0
+radius = 50.0
 
 [node name="Player" type="CharacterBody2D"]
+z_index = 20
+collision_layer = 2
+collision_mask = 7
 script = ExtResource("1_e5xnd")
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -20,7 +24,14 @@ offset = Vector2(0, -6)
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_6d0we")
 
+[node name="Arrow" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+texture = ExtResource("3_d1qai")
+
 [node name="ParryArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 7
 
 [node name="CollisionShape" type="CollisionShape2D" parent="ParryArea"]
 shape = SubResource("CircleShape2D_aevsr")

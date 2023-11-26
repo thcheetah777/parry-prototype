@@ -25,6 +25,7 @@ enum { MOVE, PARRY }
 @export var parry_rotation_smoothing = 400
 
 @onready var sprite := $Sprite
+@onready var arrow := $Arrow
 
 var state = MOVE
 var original_scale = Vector2.ONE
@@ -37,7 +38,7 @@ var touching_parryable: Parryable = null
 var current_parryable: Parryable = null
 var parry_angle = 0
 
-func _ready():
+func _enter_tree() -> void:
 	Globals.player = self
 
 func _process(delta: float) -> void:
@@ -88,9 +89,11 @@ func move_state(input: float, delta: float):
 		sprite.scale = Vector2(original_scale.x * squash, original_scale.y / squash)
 
 func parry_state(input: float, delta: float):
+	# run_rotation = input * run_rotation_degrees
 	parry_angle += input * parry_rotation_speed * delta
 	var direction = (Vector2.RIGHT).rotated(deg_to_rad(parry_angle))
 	position = position.move_toward(current_parryable.position + direction * parry_distance, parry_rotation_smoothing * delta)
+	set_arrow(direction)
 
 	if Input.is_action_just_released("parry") and current_parryable:
 		end_parry()
@@ -98,9 +101,12 @@ func parry_state(input: float, delta: float):
 func start_parry():
 	print("start parry")
 	velocity = Vector2.ZERO
+	run_rotation = 0
 	current_parryable = touching_parryable
 	var direction = (position - current_parryable.position).normalized()
 	parry_angle = rad_to_deg(direction.angle())
+	set_arrow(direction)
+	arrow.visible = true
 	state = PARRY
 
 func end_parry():
@@ -108,9 +114,15 @@ func end_parry():
 	var direction = (position - current_parryable.position).normalized()
 	velocity += direction * parry_knockback
 	current_parryable = null
+	arrow.visible = false
 	state = MOVE
 
+func set_arrow(direction: Vector2):
+	arrow.position = current_parryable.position + -direction * parry_distance
+	arrow.rotation_degrees = parry_angle - 90
+
 func _on_parry_area_area_entered(area: Area2D) -> void:
+	print(area.name)
 	if area is Parryable and not touching_parryable and not current_parryable:
 		print("touched")
 		touching_parryable = area
