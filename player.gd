@@ -14,7 +14,8 @@ enum { MOVE, PARRY }
 @export_group("Parrying")
 @export var parry_rotation_speed = 500
 @export var parry_distance = 25
-@export var parry_knockback = 350
+@export var parry_knockback = 400
+@export var parry_extra_y_velocity = 50
 
 @export_group("Animation")
 @export var stretch = 1.8
@@ -89,10 +90,8 @@ func move_state(input: float, delta: float):
 		sprite.scale = Vector2(original_scale.x * squash, original_scale.y / squash)
 
 func parry_state(input: float, delta: float):
-	# run_rotation = input * run_rotation_degrees
 	parry_angle += input * parry_rotation_speed * delta
 	var direction = (Vector2.RIGHT).rotated(deg_to_rad(parry_angle))
-	position = position.move_toward(current_parryable.position + direction * parry_distance, parry_rotation_smoothing * delta)
 	set_arrow(direction)
 
 	if Input.is_action_just_released("parry") and current_parryable:
@@ -111,8 +110,9 @@ func start_parry():
 
 func end_parry():
 	print("end parry")
-	var direction = (position - current_parryable.position).normalized()
-	velocity += direction * parry_knockback
+	var direction = (arrow.position - current_parryable.position).normalized()
+	velocity += -direction * parry_knockback
+	velocity.y -= parry_extra_y_velocity
 	current_parryable = null
 	arrow.visible = false
 	state = MOVE
