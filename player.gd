@@ -35,7 +35,7 @@ var double_jump_rotation = 0
 var can_double_jump = false
 var dash_ghost_timer = 0
 
-var touching_parryable: Parryable = null
+var touching_parryable: Array[Parryable] = []
 var current_parryable: Parryable = null
 var parry_angle = 0
 
@@ -101,7 +101,7 @@ func start_parry():
 	print("start parry")
 	velocity = Vector2.ZERO
 	run_rotation = 0
-	current_parryable = touching_parryable
+	current_parryable = find_closest_parryable()
 	var direction = (position - current_parryable.position).normalized()
 	parry_angle = rad_to_deg(direction.angle())
 	set_arrow(direction)
@@ -121,13 +121,24 @@ func set_arrow(direction: Vector2):
 	arrow.position = current_parryable.position + -direction * parry_distance
 	arrow.rotation_degrees = parry_angle - 90
 
+func find_closest_parryable():
+	touching_parryable.sort_custom(distance)
+	return touching_parryable[0]
+
+func distance(a: Parryable, b: Parryable):
+	var a_distance = position.distance_to(a.position)
+	var b_distance = position.distance_to(b.position)
+	return a_distance - b_distance < 0
+
 func _on_parry_area_area_entered(area: Area2D) -> void:
 	print(area.name)
-	if area is Parryable and not touching_parryable and not current_parryable:
+	if area is Parryable:
 		print("touched")
-		touching_parryable = area
+		touching_parryable.append(area)
 
 func _on_parry_area_area_exited(area: Area2D) -> void:
-	if area == touching_parryable:
+	if not area is Parryable: return
+	var parryable_index = touching_parryable.find(area)
+	if parryable_index != -1:
 		print("exited")
-		touching_parryable = null
+		touching_parryable.remove_at(parryable_index)
