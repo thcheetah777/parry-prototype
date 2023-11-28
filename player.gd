@@ -14,8 +14,8 @@ enum { MOVE, PARRY }
 @export_group("Parrying")
 @export var parry_rotation_speed = 500
 @export var parry_distance = 25
-@export var parry_knockback = 400
-@export var parry_extra_y_velocity = 50
+@export var parry_knockback = Vector2(400, 450)
+@export var parry_bullet_speed = 200
 
 @export_group("Animation")
 @export var stretch = 1.8
@@ -99,22 +99,34 @@ func parry_state(input: float, delta: float):
 
 func start_parry():
 	print("start parry")
+	current_parryable = find_closest_parryable()
+	arrow.visible = true
 	velocity = Vector2.ZERO
 	run_rotation = 0
-	current_parryable = find_closest_parryable()
+
 	var direction = (position - current_parryable.position).normalized()
 	parry_angle = rad_to_deg(direction.angle())
 	set_arrow(direction)
-	arrow.visible = true
+
+	if current_parryable is Bullet:
+		var bullet = current_parryable as Bullet
+		bullet.set_to_player_bullet()
+		bullet.speed = 0
+
 	state = PARRY
 
 func end_parry():
 	print("end parry")
+	arrow.visible = false
 	var direction = (arrow.position - current_parryable.position).normalized()
 	velocity += -direction * parry_knockback
-	velocity.y -= parry_extra_y_velocity
+
+	if current_parryable is Bullet:
+		var bullet = current_parryable as Bullet
+		bullet.rotation = arrow.rotation
+		bullet.speed = parry_bullet_speed
+
 	current_parryable = null
-	arrow.visible = false
 	state = MOVE
 
 func set_arrow(direction: Vector2):

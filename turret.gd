@@ -20,6 +20,6 @@ func _on_fire_timer_timeout() -> void:
 	var bullet = bullet_scene.instantiate() as Bullet
 	bullet.global_position = fire_point.global_position
 	bullet.speed = bullet_speed
-	bullet.rotation = gun.rotation
+	bullet.global_rotation = gun.global_rotation
 	Globals.world.add_child(bullet)
 	target_angle = randf_range(-angle_range, angle_range)
