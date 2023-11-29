@@ -15,19 +15,20 @@ z_index = 20
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_e5xnd")
+parry_rotation_speed = 200
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(0, 6)
 texture = ExtResource("1_banh4")
 offset = Vector2(0, -6)
 
-[node name="CollisionShape" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_6d0we")
-
 [node name="Arrow" type="Sprite2D" parent="."]
 visible = false
 top_level = true
 texture = ExtResource("3_d1qai")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6d0we")
 
 [node name="ParryArea" type="Area2D" parent="."]
 collision_layer = 0
@@ -35,6 +36,10 @@ collision_mask = 7
 
 [node name="CollisionShape" type="CollisionShape2D" parent="ParryArea"]
 shape = SubResource("CircleShape2D_aevsr")
+
+[node name="KnockbackTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
 
 [connection signal="area_entered" from="ParryArea" to="." method="_on_parry_area_area_entered"]
 [connection signal="area_exited" from="ParryArea" to="." method="_on_parry_area_area_exited"]

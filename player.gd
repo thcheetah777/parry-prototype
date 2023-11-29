@@ -12,10 +12,12 @@ enum { MOVE, PARRY }
 @export var deceleration = 1000
 
 @export_group("Parrying")
-@export var parry_rotation_speed = 500
+@export var parry_rotation_speed = 250
 @export var parry_distance = 25
-@export var parry_knockback = Vector2(400, 450)
-@export var parry_bullet_speed = 200
+@export var parry_knockback = Vector2(200, 200)
+@export var parry_knockback_perma = Vector2(0, 200)
+@export var parry_bullet_speed = 400
+@export var parry_slowmo = 0.3
 
 @export_group("Animation")
 @export var stretch = 1.8
@@ -27,6 +29,7 @@ enum { MOVE, PARRY }
 
 @onready var sprite := $Sprite
 @onready var arrow := $Arrow
+@onready var knockback_timer := $KnockbackTimer
 
 var state = MOVE
 var original_scale = Vector2.ONE
@@ -34,7 +37,6 @@ var run_rotation = 0
 var double_jump_rotation = 0
 var can_double_jump = false
 var dash_ghost_timer = 0
-
 var touching_parryable: Array[Parryable] = []
 var current_parryable: Parryable = null
 var parry_angle = 0
@@ -68,7 +70,8 @@ func move_state(input: float, delta: float):
 		run_rotation = input * run_rotation_degrees
 		velocity.x = input * run_speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, deceleration * delta)
+		if not is_knockback():
+			velocity.x = move_toward(velocity.x, 0, deceleration * delta)
 		run_rotation = 0
 
 	if Input.is_action_just_pressed("jump"):
@@ -92,7 +95,7 @@ func move_state(input: float, delta: float):
 		sprite.scale = Vector2(original_scale.x * squash, original_scale.y / squash)
 
 func parry_state(input: float, delta: float):
-	parry_angle += input * parry_rotation_speed * delta
+	parry_angle += input * parry_rotation_speed * delta / Engine.time_scale
 	var direction = (Vector2.RIGHT).rotated(deg_to_rad(parry_angle))
 	set_arrow(direction)
 
@@ -105,6 +108,8 @@ func start_parry():
 	arrow.visible = true
 	velocity = Vector2.ZERO
 	run_rotation = 0
+
+	Engine.time_scale = parry_slowmo
 
 	var direction = (position - current_parryable.position).normalized()
 	parry_angle = rad_to_deg(direction.angle())
@@ -120,7 +125,10 @@ func start_parry():
 func end_parry():
 	arrow.visible = false
 	var direction = (arrow.position - current_parryable.position).normalized()
-	velocity += -direction * parry_knockback
+	velocity += -direction * parry_knockback + -parry_knockback_perma
+	knockback_timer.start()
+
+	Engine.time_scale = 1
 
 	if current_parryable is Bullet:
 		var bullet = current_parryable as Bullet
@@ -141,6 +149,9 @@ func distance(a: Parryable, b: Parryable):
 	var a_distance = position.distance_to(a.position)
 	var b_distance = position.distance_to(b.position)
 	return a_distance - b_distance < 0
+
+func is_knockback():
+	return not knockback_timer.is_stopped()
 
 func set_parryable_outline():
 	sort_parryables()
