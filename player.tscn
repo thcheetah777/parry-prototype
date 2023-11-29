@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://b2g8d8f5ta34h"]
+[gd_scene load_steps=7 format=3 uid="uid://b2g8d8f5ta34h"]
 
 [ext_resource type="Texture2D" uid="uid://bl48f30rkyl05" path="res://assets/player.png" id="1_banh4"]
 [ext_resource type="Script" path="res://player.gd" id="1_e5xnd"]
 [ext_resource type="Texture2D" uid="uid://bkt6nggw2k5yr" path="res://assets/arrow.png" id="3_d1qai"]
+[ext_resource type="Texture2D" uid="uid://cukla8e1ep874" path="res://assets/dotted-line.png" id="4_e15fw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6d0we"]
 size = Vector2(10, 10)
@@ -23,9 +24,14 @@ texture = ExtResource("1_banh4")
 offset = Vector2(0, -6)
 
 [node name="Arrow" type="Sprite2D" parent="."]
-visible = false
 top_level = true
 texture = ExtResource("3_d1qai")
+
+[node name="Line" type="Sprite2D" parent="Arrow"]
+z_index = -20
+position = Vector2(0, -139)
+rotation = -1.57079
+texture = ExtResource("4_e15fw")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_6d0we")
