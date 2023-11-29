@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://world.gd" id="1_r0bwy"]
 [ext_resource type="PackedScene" uid="uid://b2g8d8f5ta34h" path="res://player.tscn" id="2_riabk"]
 [ext_resource type="PackedScene" uid="uid://bs2rcexh4i7r7" path="res://parry_point.tscn" id="3_m862k"]
-[ext_resource type="PackedScene" uid="uid://duvehrwbbw012" path="res://turret.tscn" id="4_2us64"]
+[ext_resource type="PackedScene" uid="uid://duvehrwbbw012" path="res://turret.tscn" id="5_2w17h"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0xdkv"]
 texture = ExtResource("1_k8aig")
@@ -503,10 +503,16 @@ position = Vector2(160, 184)
 [node name="ParryPoint" parent="World" instance=ExtResource("3_m862k")]
 position = Vector2(160, 144)
 
-[node name="Turret" parent="." instance=ExtResource("4_2us64")]
-position = Vector2(16, 128)
-rotation = -4.71238
+[node name="ParryPoint2" parent="World" instance=ExtResource("3_m862k")]
+position = Vector2(112, 144)
 
-[node name="Turret2" parent="." instance=ExtResource("4_2us64")]
+[node name="ParryPoint3" parent="World" instance=ExtResource("3_m862k")]
+position = Vector2(208, 144)
+
+[node name="Turret" parent="World" instance=ExtResource("5_2w17h")]
+position = Vector2(16, 128)
+rotation = 1.57079
+
+[node name="Turret2" parent="World" instance=ExtResource("5_2w17h")]
 position = Vector2(304, 128)
-rotation = -7.85397
+rotation = 4.71238

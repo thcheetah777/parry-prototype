@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cthwjnlqt5hoi"]
+[gd_scene load_steps=6 format=3 uid="uid://cthwjnlqt5hoi"]
 
 [ext_resource type="Script" path="res://bullet.gd" id="1_sb40q"]
 [ext_resource type="Texture2D" uid="uid://3bsar2op3po4" path="res://assets/bullet.png" id="2_w8qym"]
+[ext_resource type="Script" path="res://outline_sprite.gd" id="3_qqpwe"]
+[ext_resource type="Texture2D" uid="uid://dpig0ekb07ry" path="res://assets/bullet-outline.png" id="4_h7n2y"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vx57q"]
 radius = 5.0
@@ -13,6 +15,8 @@ script = ExtResource("1_sb40q")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_w8qym")
+script = ExtResource("3_qqpwe")
+outlined_texture = ExtResource("4_h7n2y")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_vx57q")

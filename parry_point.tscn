@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bs2rcexh4i7r7"]
+[gd_scene load_steps=6 format=3 uid="uid://bs2rcexh4i7r7"]
 
 [ext_resource type="Script" path="res://parry_point.gd" id="1_jqk5x"]
 [ext_resource type="Texture2D" uid="uid://kukb1p76wnjf" path="res://assets/parry-point.png" id="2_myqyv"]
+[ext_resource type="Script" path="res://outline_sprite.gd" id="3_lu75k"]
+[ext_resource type="Texture2D" uid="uid://8s25eywux6af" path="res://assets/parry-point-outline.png" id="4_dqgmp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_b6gj5"]
 radius = 8.0
@@ -12,6 +14,8 @@ script = ExtResource("1_jqk5x")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_myqyv")
+script = ExtResource("3_lu75k")
+outlined_texture = ExtResource("4_dqgmp")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_b6gj5")

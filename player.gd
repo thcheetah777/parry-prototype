@@ -7,7 +7,7 @@ enum { MOVE, PARRY }
 @export var run_speed = 160
 @export var jump_velocity = 300
 @export var gravity = 980
-@export var fall_gravity = 1200
+@export var fall_gravity = 1100
 @export var double_jump = false
 @export var deceleration = 1000
 
@@ -54,6 +54,8 @@ func _physics_process(delta: float) -> void:
 		PARRY: parry_state(input, delta)
 
 func move_state(input: float, delta: float):
+	set_parryable_outline()
+
 	if not is_on_floor():
 		if velocity.y > 0:
 			velocity.y += fall_gravity * delta
@@ -98,8 +100,8 @@ func parry_state(input: float, delta: float):
 		end_parry()
 
 func start_parry():
-	print("start parry")
-	current_parryable = find_closest_parryable()
+	sort_parryables()
+	current_parryable = touching_parryable[0]
 	arrow.visible = true
 	velocity = Vector2.ZERO
 	run_rotation = 0
@@ -116,7 +118,6 @@ func start_parry():
 	state = PARRY
 
 func end_parry():
-	print("end parry")
 	arrow.visible = false
 	var direction = (arrow.position - current_parryable.position).normalized()
 	velocity += -direction * parry_knockback
@@ -133,24 +134,35 @@ func set_arrow(direction: Vector2):
 	arrow.position = current_parryable.position + -direction * parry_distance
 	arrow.rotation_degrees = parry_angle - 90
 
-func find_closest_parryable():
+func sort_parryables():
 	touching_parryable.sort_custom(distance)
-	return touching_parryable[0]
 
 func distance(a: Parryable, b: Parryable):
 	var a_distance = position.distance_to(a.position)
 	var b_distance = position.distance_to(b.position)
 	return a_distance - b_distance < 0
 
+func set_parryable_outline():
+	sort_parryables()
+	for i in range(len(touching_parryable)):
+		var parryable = touching_parryable[i] as Parryable
+		var parryable_sprite = parryable.get_node_or_null("Sprite") as OutlineSprite2D
+		if parryable_sprite:
+			parryable_sprite.outline = i == 0
+
 func _on_parry_area_area_entered(area: Area2D) -> void:
-	print(area.name)
-	if area is Parryable:
-		print("touched")
-		touching_parryable.append(area)
+	if not area is Parryable or current_parryable: return
+
+	touching_parryable.append(area)
 
 func _on_parry_area_area_exited(area: Area2D) -> void:
 	if not area is Parryable: return
+
 	var parryable_index = touching_parryable.find(area)
 	if parryable_index != -1:
-		print("exited")
+		var parryable = touching_parryable[parryable_index] as Parryable
+		var parryable_sprite = parryable.get_node_or_null("Sprite") as OutlineSprite2D
+		if parryable_sprite:
+			parryable_sprite.outline = false
+
 		touching_parryable.remove_at(parryable_index)
