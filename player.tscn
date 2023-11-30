@@ -24,6 +24,7 @@ texture = ExtResource("1_banh4")
 offset = Vector2(0, -6)
 
 [node name="Arrow" type="Sprite2D" parent="."]
+visible = false
 top_level = true
 texture = ExtResource("3_d1qai")
 
