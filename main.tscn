@@ -501,13 +501,7 @@ layer_0/tile_data = PackedInt32Array(655360, 393216, 1, 589824, 393216, 1, 52428
 position = Vector2(160, 184)
 
 [node name="ParryPoint" parent="World" instance=ExtResource("3_m862k")]
-position = Vector2(160, 144)
-
-[node name="ParryPoint2" parent="World" instance=ExtResource("3_m862k")]
-position = Vector2(112, 144)
-
-[node name="ParryPoint3" parent="World" instance=ExtResource("3_m862k")]
-position = Vector2(208, 144)
+position = Vector2(160, 88)
 
 [node name="Turret" parent="World" instance=ExtResource("5_2w17h")]
 position = Vector2(16, 128)

@@ -103,7 +103,6 @@ func parry_state(input: float, delta: float):
 		end_parry()
 
 func start_parry():
-	sort_parryables()
 	current_parryable = touching_parryable[0]
 	arrow.visible = true
 	velocity = Vector2.ZERO
